@@ -1,0 +1,9 @@
+{
+  "name": "root-proxy",
+  "private": true,
+  "scripts": {
+    "build": "npm --workspace=landing-page run build",
+    "start": "npm --workspace=landing-page run start"
+  },
+  "workspaces": ["apps/*", "packages/*"]
+}
