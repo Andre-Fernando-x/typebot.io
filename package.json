@@ -12,8 +12,7 @@
     "apps/*"
   ],
   "scripts": {
-  "start": "turbo run start"
-  }
+  "start": "turbo run start" ,
     "postinstall": "turbo run db:generate",
     "prepare": "husky",
     "pre-commit": "turbo run format-and-lint lint-repo check-broken-links test",
