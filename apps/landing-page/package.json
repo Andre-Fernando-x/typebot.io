@@ -3,11 +3,12 @@
   "version": "0.0.1",
   "type": "module",
   "private": true,
-  "scripts": {
+    "scripts": {
     "typecheck": "tsc --noEmit",
     "dev": "dotenv -e ./.env -e ../../.env -- vite dev --port 3003",
     "build": "bun check-broken-links && dotenv -e ./.env -e ../../.env -- vite build",
-    "check-broken-links": "mdx-local-link-checker content public '*/(index.mdx|blog|about|pricing?isTiersModalOpened=true)'"
+    "check-broken-links": "mdx-local-link-checker content public '*/(index.mdx|blog|about|pricing?isTiersModalOpened=true)'",
+    "start": "dotenv -e ./.env -e ../../.env -- vite preview --port $PORT --host 0.0.0.0"
   },
   "dependencies": {
     "@tanstack/react-router": "1.123.2",
