@@ -1,8 +1,10 @@
-# Etapa base
-FROM oven/bun:1 AS base
+# Usar imagem Node LTS
+FROM node:20-bullseye AS base
+
+# Criar diretório de trabalho
 WORKDIR /app
 
-# Instalar dependências do sistema para node-gyp (necessárias para o isolated-vm)
+# Instalar dependências de sistema para módulos nativos
 RUN apt-get update && apt-get install -y \
   python3 \
   make \
@@ -10,17 +12,20 @@ RUN apt-get update && apt-get install -y \
   build-essential \
   && rm -rf /var/lib/apt/lists/*
 
-# Copiar os arquivos de dependências
-COPY package.json ./
+# Copiar package.json e package-lock.json (se existir)
+COPY package*.json ./
 
-# Instalar dependências do projeto
-RUN bun install --frozen-lockfile
+# Instalar dependências
+RUN npm install
 
 # Copiar o restante do código
 COPY . .
 
-# Expor a porta da aplicação
+# Gerar build (opcional — apenas se o projeto tiver)
+RUN npm run build || echo "Sem build script, seguindo..."
+
+# Expor porta padrão
 EXPOSE 3000
 
-# Comando padrão para iniciar o app
-CMD ["bun", "run", "start"]
+# Rodar o servidor
+CMD ["npm", "start"]
