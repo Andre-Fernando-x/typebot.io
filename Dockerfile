@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
   && rm -rf /var/lib/apt/lists/*
 
 # Copiar os arquivos de dependências
-COPY bun.lockb package.json ./
+COPY package.json ./
 
 # Instalar dependências do projeto
 RUN bun install --frozen-lockfile
