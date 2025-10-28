@@ -6,20 +6,20 @@ RUN apt-get update && apt-get install -y \
   python3 make g++ build-essential \
   && rm -rf /var/lib/apt/lists/*
 
-# Copiar package.jsons do monorepo
+# Copiar package.jsons
 COPY package*.json ./
 
-# Instalar dependências com tolerância de conflitos
-RUN npm install --legacy-peer-deps
+# Instalar dependências (sem rodar postinstall)
+RUN npm install --legacy-peer-deps --ignore-scripts
 
-# Copiar todo o projeto
+# Copiar o restante do código
 COPY . .
 
-# Construir o builder (se existir)
-RUN npm run build || echo "Build opcional - ignorado"
+# Build opcional (caso exista)
+RUN npm run build || echo "Build ignorado..."
 
 # Expor porta padrão
 EXPOSE 3000
 
-# Rodar o servidor principal do Typebot (ajuste se necessário)
+# Rodar servidor
 CMD ["npm", "start"]
