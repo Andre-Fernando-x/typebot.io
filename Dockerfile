@@ -1,31 +1,25 @@
-# Usar imagem Node LTS
 FROM node:20-bullseye AS base
-
-# Criar diretório de trabalho
 WORKDIR /app
 
-# Instalar dependências de sistema para módulos nativos
+# Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
-  python3 \
-  make \
-  g++ \
-  build-essential \
+  python3 make g++ build-essential \
   && rm -rf /var/lib/apt/lists/*
 
-# Copiar package.json e package-lock.json (se existir)
+# Copiar package.jsons do monorepo
 COPY package*.json ./
 
-# Instalar dependências
-RUN npm install
+# Instalar dependências com tolerância de conflitos
+RUN npm install --legacy-peer-deps
 
-# Copiar o restante do código
+# Copiar todo o projeto
 COPY . .
 
-# Gerar build (opcional — apenas se o projeto tiver)
-RUN npm run build || echo "Sem build script, seguindo..."
+# Construir o builder (se existir)
+RUN npm run build || echo "Build opcional - ignorado"
 
 # Expor porta padrão
 EXPOSE 3000
 
-# Rodar o servidor
+# Rodar o servidor principal do Typebot (ajuste se necessário)
 CMD ["npm", "start"]
