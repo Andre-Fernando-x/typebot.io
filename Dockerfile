@@ -7,23 +7,23 @@ RUN apt-get update && apt-get install -y \
   python3 make g++ build-essential \
   && rm -rf /var/lib/apt/lists/*
 
-# Copiar arquivos de dependências
+# Copiar os manifests de dependências
 COPY package*.json ./
 
-# Instalar dependências (evita erro de peer deps)
-RUN npm install --legacy-peer-deps
+# Instalar dependências (sem rodar o postinstall do Turbo)
+RUN npm install --ignore-scripts --legacy-peer-deps
 
 # Copiar todo o código
 COPY . .
 
-# (Opcional) Geração do Prisma Client (se houver banco)
+# Gerar Prisma Client se existir
 RUN npx prisma generate || echo "Prisma não encontrado, ignorando..."
 
-# Buildar o projeto
-RUN npm run build || echo "Build padrão ignorado..."
+# Buildar o projeto (necessário pro painel do Typebot)
+RUN npm run build || echo "Build ignorado..."
 
-# Expor porta padrão do Typebot
+# Expor a porta padrão
 EXPOSE 3000
 
-# Comando de inicialização
+# Iniciar o servidor
 CMD ["npm", "start"]
