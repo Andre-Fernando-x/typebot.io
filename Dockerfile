@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y \
 # Copiar os manifests de dependências
 COPY package*.json ./
 
-# Instalar dependências (sem rodar o postinstall do Turbo)
-RUN npm install --ignore-scripts --legacy-peer-deps
+# Instalar dependências (sem postinstall)
+RUN npm ci --ignore-scripts --legacy-peer-deps
 
 # Copiar todo o código
 COPY . .
@@ -19,11 +19,10 @@ COPY . .
 # Gerar Prisma Client se existir
 RUN npx prisma generate || echo "Prisma não encontrado, ignorando..."
 
-# Buildar o projeto (necessário pro painel do Typebot)
-RUN npm run build || echo "Build ignorado..."
+# FORÇAR build apenas no workspace landing-page
+RUN npm run --workspace=landing-page build
 
-# Expor a porta padrão
 EXPOSE 3000
 
-# Iniciar o servidor
-CMD ["npm", "start"]
+# Iniciar preview do workspace landing-page na porta fornecida pelo Render
+CMD ["sh", "-c", "npm run --workspace=landing-page preview -- --host 0.0.0.0 --port $PORT"]
